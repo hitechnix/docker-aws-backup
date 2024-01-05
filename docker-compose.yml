@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  docker-aws-backup:
+    container_name: docker-aws-backup
+    restart: always
+    image: hitechnix/docker-aws-backup:1.0.0
+    environment:
+      - SCHEDULE=${SCHEDULE:-@weekly}
+      - BACKUP_FILE_NAME=${BACKUP_FILE_NAME:-backup}
+      - BACKUP_FOLDER=${BACKUP_FOLDER}
+      - BACKUP_KEEP_DAYS=${BACKUP_KEEP_DAYS:-7}
+      - PASSPHRASE=${PASSPHRASE:-passphrase}
+      - S3_REGION=${S3_REGION:-region}
+      - S3_BUCKET=${S3_BUCKET:-bucket}
+      - S3_PREFIX=${S3_PREFIX:-prefix}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID:-key}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:-secret}
+    volumes:
+      - ${BACKUP_FOLDER}:/home/backups
+    networks:
+      - network-bridge
+
+networks:
+  network-bridge:
+    driver: bridge
+    name: network-bridge
